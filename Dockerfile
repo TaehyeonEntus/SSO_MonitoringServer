@@ -43,7 +43,7 @@ ENV GF_PATHS_HOME=/grafana
 
 RUN wget https://dl.grafana.com/oss/release/grafana-10.4.2.linux-amd64.tar.gz \
     && tar -zxvf grafana-10.4.2.linux-amd64.tar.gz \
-    && mv grafana-10.4.2 /grafana \
+    && mv grafana-v10.4.2 /grafana \
     && rm grafana-10.4.2.linux-amd64.tar.gz
 
 # -----------------------------
