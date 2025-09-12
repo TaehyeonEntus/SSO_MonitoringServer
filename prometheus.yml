@@ -7,13 +7,11 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['auth.taehyeon-studio.site']
-
   - job_name: 'board-service'
     scheme: https
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['board.taehyeon-studio.site']
-
   - job_name: 'gears-service'
     scheme: https
     metrics_path: '/actuator/prometheus'
