@@ -9,36 +9,40 @@ RUN apt-get update && apt-get install -y \
     tar \
     bash \
     curl \
+    jq \
     openjdk-17-jdk \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/apt/lists/*
 
 WORKDIR /app
 
 # -----------------------------
-# Prometheus 설치
+# Prometheus 설치 (최신 버전 자동 다운로드)
 # -----------------------------
-RUN wget https://github.com/prometheus/prometheus/releases/download/v3.5.0/prometheus-3.5.0.linux-amd64.tar.gz \
-    && tar xvf prometheus-3.5.0.linux-amd64.tar.gz \
-    && mv prometheus-3.5.0.linux-amd64 /prometheus \
-    && rm prometheus-3.5.0.linux-amd64.tar.gz
-
+RUN LATEST_PROMETHEUS_VERSION=$(curl -sL https://api.github.com/repos/prometheus/prometheus/releases/latest | jq -r ".tag_name") \
+    && PROMETHEUS_URL="https://github.com/prometheus/prometheus/releases/download/${LATEST_PROMETHEUS_VERSION}/prometheus-${LATEST_PROMETHEUS_VERSION:1}.linux-amd64.tar.gz" \
+    && echo "Downloading Prometheus from: $PROMETHEUS_URL" \
+    && wget -O prometheus.tar.gz "$PROMETHEUS_URL" \
+    && tar xvf prometheus.tar.gz \
+    && mv prometheus-*/ /prometheus \
+    && rm prometheus.tar.gz
 
 COPY prometheus.yml /prometheus/prometheus.yml
 
 # -----------------------------
-# Grafana 설치
+# Grafana 설치 (최신 버전 자동 다운로드)
 # -----------------------------
 ENV GF_SECURITY_ADMIN_PASSWORD=admin
 ENV GF_PATHS_DATA=/grafana/data
 ENV GF_PATHS_HOME=/grafana
 
-RUN wget https://dl.grafana.com/oss/release/grafana-12.1.0.linux-amd64.tar.gz \
-    && tar -zxvf grafana-12.1.0.linux-amd64.tar.gz \
-    && mv grafana-12.1.0.linux-amd64 /grafana \
-    && rm grafana-12.1.0.linux-amd64.tar.gz
-
-
+RUN LATEST_GRAFANA_VERSION=$(curl -sL https://api.github.com/repos/grafana/grafana/releases/latest | jq -r ".tag_name") \
+    && GRAFANA_URL="https://dl.grafana.com/oss/release/grafana-${LATEST_GRAFANA_VERSION:1}.linux-amd64.tar.gz" \
+    && echo "Downloading Grafana from: $GRAFANA_URL" \
+    && wget -O grafana.tar.gz "$GRAFANA_URL" \
+    && tar -zxvf grafana.tar.gz \
+    && mv grafana-* /grafana \
+    && rm grafana.tar.gz
 
 # -----------------------------
 # 실행 스크립트
@@ -46,7 +50,8 @@ RUN wget https://dl.grafana.com/oss/release/grafana-12.1.0.linux-amd64.tar.gz \
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Grafana 외부 포트 + Prometheus 내부 포트
+# Render는 EXPOSE 포트를 무시하고 $PORT 환경 변수를 사용합니다.
 EXPOSE 10000 9090
 
+# CMD로 스크립트 실행
 CMD ["/start.sh"]
