@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'auth-server'
+    scheme: https
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['auth.taehyeon-studio.site:10000']
+
+  - job_name: 'board-service'
+    scheme: https
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['board.taehyeon-studio.site:10000']
+
+  - job_name: 'gears-service'
+    scheme: https
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['gears.taehyeon-studio.site:10000']
