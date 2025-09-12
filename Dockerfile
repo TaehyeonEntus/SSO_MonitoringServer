@@ -35,8 +35,9 @@ ENV GF_PATHS_HOME=/grafana
 
 RUN wget https://dl.grafana.com/oss/release/grafana-12.1.0.linux-amd64.tar.gz \
     && tar -zxvf grafana-12.1.0.linux-amd64.tar.gz \
-    && mv grafana-12.1.0 /grafana \
+    && mv grafana-12.1.0.linux-amd64 /grafana \
     && rm grafana-12.1.0.linux-amd64.tar.gz
+
 
 
 # -----------------------------
