@@ -18,11 +18,11 @@ WORKDIR /app
 # -----------------------------
 # Prometheus 설치
 # -----------------------------
-ENV PROMETHEUS_VERSION=2.50.0
-RUN wget https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz \
-    && tar xvf prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz \
-    && mv prometheus-${PROMETHEUS_VERSION}.linux-amd64 /prometheus \
-    && rm prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz
+RUN wget https://github.com/prometheus/prometheus/releases/latest/download/prometheus-linux-amd64.tar.gz \
+    && tar xvf prometheus-linux-amd64.tar.gz \
+    && mv prometheus-* /prometheus \
+    && rm prometheus-linux-amd64.tar.gz
+
 
 COPY prometheus.yml /prometheus/prometheus.yml
 
@@ -33,10 +33,10 @@ ENV GF_SECURITY_ADMIN_PASSWORD=admin
 ENV GF_PATHS_DATA=/grafana/data
 ENV GF_PATHS_HOME=/grafana
 
-RUN wget https://dl.grafana.com/oss/release/grafana-10.5.2.linux-amd64.tar.gz \
-    && tar -zxvf grafana-10.5.2.linux-amd64.tar.gz \
-    && mv grafana-10.5.2 /grafana \
-    && rm grafana-10.5.2.linux-amd64.tar.gz
+RUN wget https://dl.grafana.com/oss/release/grafana-latest.linux-amd64.tar.gz \
+    && tar -zxvf grafana-latest.linux-amd64.tar.gz \
+    && mv grafana-* /grafana \
+    && rm grafana-latest.linux-amd64.tar.gz
 
 # -----------------------------
 # 실행 스크립트
