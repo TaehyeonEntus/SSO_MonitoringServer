@@ -46,6 +46,12 @@ RUN wget https://dl.grafana.com/oss/release/grafana-10.4.2.linux-amd64.tar.gz \
     && mv grafana-v10.4.2 /grafana \
     && rm grafana-10.4.2.linux-amd64.tar.gz
 
+RUN mkdir -p /etc/grafana/dashboards
+RUN mkdir -p /etc/grafana/provisioning/dashboards
+
+COPY ./dashboards/ /etc/grafana/dashboards/
+COPY ./dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml
+
 # -----------------------------
 # 실행 스크립트 및 포트 설정
 # -----------------------------
